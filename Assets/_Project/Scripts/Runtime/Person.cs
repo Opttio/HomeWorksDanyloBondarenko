@@ -2,19 +2,23 @@ using UnityEngine;
 
 namespace _Project.Scripts.Runtime
 {
-    public class Person : MonoBehaviour
+    public abstract class Person : MonoBehaviour
     {
-        private string _personName;
+        private string _personName = "Bobby";
         private int _personAge;
 
-        public string PersonName { get; private set; }
+        public string PersonName
+        {
+            get => _personName;
+            private set => _personName = value;
+        }
 
         public int PersonAge
         {
             get => _personAge;
             set
             {
-                if (value > 0 || value < 100)
+                if (value > 0 && value < 100)
                     _personAge = value;
                 else
                     Debug.Log ("Age must be between 0 and 100");
@@ -23,8 +27,9 @@ namespace _Project.Scripts.Runtime
 
         public virtual void ShowStat()
         {
-            Debug.Log($"Person Name = {_personName}");
+            Debug.Log($"Person Name = {PersonName}");
         }
-        
+
+        public abstract void TakeDamage(int damageValue);
     }
 }
