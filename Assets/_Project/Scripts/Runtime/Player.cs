@@ -1,0 +1,53 @@
+using UnityEngine;
+
+namespace _Project.Scripts.Runtime
+{
+    public class Player : MonoBehaviour
+    {
+        [SerializeField] private Rigidbody2D _playerRB;
+        [SerializeField] private float _jumpPower;
+        private bool _isGrounded = false;
+        [SerializeField] private float _groundCheckDistance = 0.2f;
+        [SerializeField] private LayerMask _groundLayer;
+        [SerializeField] private PlayerInput _playerInput;
+        [SerializeField] private float _moveSpeed;
+
+        private void Update()
+        {
+            CanJump(out _isGrounded);
+        }
+
+        private void FixedUpdate()
+        {
+            if (_isGrounded)
+            {
+                Jump();
+            }
+            Move();
+        }
+
+        private void Move()
+        {
+            Vector2 inputVector = _playerInput.GetMoveInputVector();
+            Vector3 moveDirection = new Vector3(inputVector.x, 0, 0);
+            transform.position += moveDirection * (Time.deltaTime * _moveSpeed);
+        }
+        private void Jump()
+        {
+            // _playerRB.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
+            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
+            _isGrounded = false;
+        }
+    
+        private void CanJump(out bool _isGrounded)
+        {
+            Debug.DrawRay(_playerRB.position, Vector2.down * _groundCheckDistance, Color.red);
+            
+            if (_playerRB.linearVelocity.y > 0) _isGrounded = false;
+            else _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance,
+                    _groundLayer);
+        }
+
+    
+    }
+}
