@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace _Project.Scripts.Runtime
 {
@@ -23,6 +24,14 @@ namespace _Project.Scripts.Runtime
                 inputVector.x = 1;
             inputVector = inputVector.normalized;
             return inputVector;*/
+        }
+
+        
+        //Якось я дійшов до того як змусити PlayerInput контролювати і передавати Player чи натис я пробіл.
+        public bool GetJumpButton()
+        {
+            if (inputSystemActions.Player.Jump.triggered) return true;
+            else return false;
         }
     }
 }

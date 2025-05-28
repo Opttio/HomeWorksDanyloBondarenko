@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 namespace _Project.Scripts.Runtime
 {
@@ -7,6 +8,7 @@ namespace _Project.Scripts.Runtime
         [SerializeField] private Rigidbody2D _playerRB;
         [SerializeField] private float _jumpPower;
         private bool _isGrounded = false;
+        private bool _isDoubleJump = false;
         [SerializeField] private float _groundCheckDistance = 0.2f;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private PlayerInput _playerInput;
@@ -15,15 +17,25 @@ namespace _Project.Scripts.Runtime
         private void Update()
         {
             CanJump(out _isGrounded);
+            
+            //Тут я спочатку не розумів як зробити так, щоб мій PlayerInput контролював чи натискаю я пробіл, тому робив прямим зчитуванням.
+            // if (_isDoubleJump && Input.GetKeyDown(KeyCode.Space)) DoubleJump();
+            
+            if (_isDoubleJump && _playerInput.GetJumpButton()) DoubleJump();
+            //Треба ставити DoubleJump в Update бо в FixedUpdate воно спрацьовує через раз, а не в той момент коли я натис кнопку.
         }
 
         private void FixedUpdate()
         {
-            if (_isGrounded)
-            {
-                Jump();
-            }
             Move();
+            if (_isGrounded) Jump();
+        }
+
+        private void DoubleJump()
+        {
+            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
+            // _playerRB.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
+            _isDoubleJump = false;
         }
 
         private void Move()
@@ -37,6 +49,7 @@ namespace _Project.Scripts.Runtime
             // _playerRB.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
             _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
             _isGrounded = false;
+            _isDoubleJump = true;
         }
     
         private void CanJump(out bool _isGrounded)
@@ -44,10 +57,11 @@ namespace _Project.Scripts.Runtime
             Debug.DrawRay(_playerRB.position, Vector2.down * _groundCheckDistance, Color.red);
             
             if (_playerRB.linearVelocity.y > 0) _isGrounded = false;
-            else _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance,
+            else 
+            {
+                _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance,
                     _groundLayer);
+            }
         }
-
-    
     }
 }
