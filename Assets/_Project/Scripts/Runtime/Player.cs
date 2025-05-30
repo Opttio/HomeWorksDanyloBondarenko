@@ -14,6 +14,8 @@ namespace _Project.Scripts.Runtime
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private float _moveSpeed;
+        
+        public bool IsGrounded => _isGrounded;
 
         private void Update()
         {
@@ -57,7 +59,7 @@ namespace _Project.Scripts.Runtime
             Vector3 moveDirection = new Vector3(inputVector.x, 0, 0);
             transform.position += moveDirection * (Time.deltaTime * _moveSpeed);
         }
-        private void Jump()
+        public void Jump()
         {
             // _playerRB.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
             _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
