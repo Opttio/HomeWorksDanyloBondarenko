@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -1212828463141777123}
   - component: {fileID: 1589896036813680803}
   m_Layer: 7
-  m_Name: Platform
+  m_Name: BasePlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 1264905761654117007}
   - component: {fileID: 6363862754810510219}
   m_Layer: 7
-  m_Name: PFRender
+  m_Name: BPRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

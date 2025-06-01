@@ -3,7 +3,7 @@ using UnityEngine.InputSystem.HID;
 
 namespace _Project.Scripts.Runtime
 {
-    public class Player : MonoBehaviour
+    public class MainCharacter : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _playerRB;
         [SerializeField] private float _jumpPower;
@@ -16,6 +16,7 @@ namespace _Project.Scripts.Runtime
         [SerializeField] private float _moveSpeed;
         
         public bool IsGrounded => _isGrounded;
+        public Rigidbody2D PlayerRB => _playerRB;
 
         private void Update()
         {

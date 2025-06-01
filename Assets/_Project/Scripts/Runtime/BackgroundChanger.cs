@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Runtime
@@ -6,11 +7,11 @@ namespace _Project.Scripts.Runtime
     public class BackgroundChanger : MonoBehaviour
     {
         [SerializeField] private GameObject[] _backgrounds;
-        [SerializeField] private Player _player;
+        [SerializeField] private MainCharacter mainCharacter;
 
         private void Update()
         {
-            if (_player.IsGrounded)
+            if (mainCharacter.IsGrounded)
             {
                 OffAllBackgrounds();
                 SetBackground(RandomInt());
