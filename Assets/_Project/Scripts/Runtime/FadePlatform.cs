@@ -1,7 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Object = System.Object;
 
 namespace _Project.Scripts.Runtime
 {
@@ -13,6 +10,11 @@ namespace _Project.Scripts.Runtime
         [SerializeField] private GameObject[] _fadePlatforms;
         private bool _isChange = false;
         private int _counter = 1;
+
+        private void OnEnable()
+        {
+            _character = GameObject.FindFirstObjectByType<MainCharacter>();
+        }
 
         private void Update()
         {

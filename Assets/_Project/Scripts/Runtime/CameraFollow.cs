@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.Runtime;
 using UnityEngine;
 
@@ -11,6 +10,11 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private bool _followByX;
     [SerializeField] private bool _followByY;
     [SerializeField] private bool _followByZ;
+
+    /*private void OnEnable()
+    {
+        _target = GameObject.FindGameObjectsWithTag("Target")[0].transform;
+    }*/
 
     private void Update()
     {

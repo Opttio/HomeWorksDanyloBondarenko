@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 
 namespace _Project.Scripts.Runtime
 {
@@ -18,6 +18,10 @@ namespace _Project.Scripts.Runtime
         public bool IsGrounded => _isGrounded;
         public Rigidbody2D PlayerRB => _playerRB;
 
+        /*private void OnEnable()
+        {
+            _playerInput = GameObject.FindFirstObjectByType<PlayerInput>();
+        }*/
         private void Update()
         {
             CanJump(out _isGrounded);
@@ -27,7 +31,6 @@ namespace _Project.Scripts.Runtime
             // if (_isDoubleJump && Input.GetKeyDown(KeyCode.Space)) DoubleJump();
             
             // if (_isDoubleJump && _playerInput.GetJumpButton()) DoubleJump();
-            //Треба ставити DoubleJump в Update бо в FixedUpdate воно спрацьовує через раз, а не в той момент коли я натис кнопку.
         }
 
         private void FixedUpdate()
@@ -59,6 +62,8 @@ namespace _Project.Scripts.Runtime
             Vector2 inputVector = _playerInput.GetMoveInputVector();
             Vector3 moveDirection = new Vector3(inputVector.x, 0, 0);
             transform.position += moveDirection * (Time.deltaTime * _moveSpeed);
+            if (inputVector.x > 0) transform.localScale = new Vector3(-1, 1, 1);
+            else if (inputVector.x < 0) transform.localScale = new Vector3(1, 1, 1);
         }
         public void Jump()
         {
