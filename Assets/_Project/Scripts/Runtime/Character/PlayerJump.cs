@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace _Project.Scripts.Runtime
+namespace _Project.Scripts.Runtime.Character
 {
     public class PlayerJump : MonoBehaviour
     {

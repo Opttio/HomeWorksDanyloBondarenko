@@ -1,4 +1,5 @@
 using _Project.Scripts.Runtime;
+using _Project.Scripts.Runtime.Character;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour

@@ -1,6 +1,7 @@
+using _Project.Scripts.Runtime.Character;
 using UnityEngine;
 
-namespace _Project.Scripts.Runtime
+namespace _Project.Scripts.Environment.Platforms
 {
     public class FadePlatform : MonoBehaviour
     {

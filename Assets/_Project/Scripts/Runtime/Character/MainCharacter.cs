@@ -1,7 +1,9 @@
 using System;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace _Project.Scripts.Runtime
+namespace _Project.Scripts.Runtime.Character
 {
     public class MainCharacter : MonoBehaviour
     {
@@ -10,10 +12,13 @@ namespace _Project.Scripts.Runtime
         private bool _isGrounded = false;
         private bool _isDoubleJump = false;
         private bool _pushSpace = false;
+        private bool _isBounce = false;
         [SerializeField] private float _groundCheckDistance = 0.2f;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private float _moveSpeed;
+        [SerializeField] private float _bouncePower;
+        [SerializeField] private LayerMask _bounceLayer;
         
         public bool IsGrounded => _isGrounded;
         public Rigidbody2D PlayerRB => _playerRB;
@@ -26,17 +31,15 @@ namespace _Project.Scripts.Runtime
         {
             CanJump(out _isGrounded);
             PushSpace();
-            
-            //Тут я спочатку не розумів як зробити так, щоб мій PlayerInput контролював чи натискаю я пробіл, тому робив прямим зчитуванням.
-            // if (_isDoubleJump && Input.GetKeyDown(KeyCode.Space)) DoubleJump();
-            
-            // if (_isDoubleJump && _playerInput.GetJumpButton()) DoubleJump();
+            CanBounce(out _isBounce);
         }
 
         private void FixedUpdate()
         {
             Move();
+            if (_isBounce) Bounce();
             if (_isGrounded) Jump();
+            
             if (_pushSpace)
             {
                 if (_isDoubleJump)
@@ -46,13 +49,14 @@ namespace _Project.Scripts.Runtime
 
         private void PushSpace()
         {
+            if (_isDoubleJump == false)
+                return;
             if (_playerInput.GetJumpButton())
                 _pushSpace = true;
         }
         private void DoubleJump()
         {
             _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
-            // _playerRB.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
             _isDoubleJump = false;
             _pushSpace = false;
         }
@@ -61,7 +65,7 @@ namespace _Project.Scripts.Runtime
         {
             Vector2 inputVector = _playerInput.GetMoveInputVector();
             Vector3 moveDirection = new Vector3(inputVector.x, 0, 0);
-            transform.position += moveDirection * (Time.deltaTime * _moveSpeed);
+            transform.position += moveDirection * (Time.fixedDeltaTime * _moveSpeed);
             if (inputVector.x > 0) transform.localScale = new Vector3(-1, 1, 1);
             else if (inputVector.x < 0) transform.localScale = new Vector3(1, 1, 1);
         }
@@ -78,11 +82,33 @@ namespace _Project.Scripts.Runtime
             Debug.DrawRay(_playerRB.position, Vector2.down * _groundCheckDistance, Color.red);
             
             if (_playerRB.linearVelocity.y > 0) _isGrounded = false;
-            else 
+            else
+                _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        }
+
+        public void Bounce()
+        {
+            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _bouncePower);
+            _isBounce = false;
+            _isDoubleJump = true;
+            _pushSpace = false;
+            _isGrounded = false;
+        }
+
+        private void CanBounce(out bool _isBounce)
+        {
+            if (_playerRB.linearVelocity.y > 0) _isBounce = false;
+            else
+                _isBounce = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance, _bounceLayer);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.tag == "Enemy")
             {
-                _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance,
-                    _groundLayer);
+                Destroy(this.gameObject);
             }
         }
+        
     }
 }

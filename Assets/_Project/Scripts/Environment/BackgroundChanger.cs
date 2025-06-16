@@ -1,8 +1,9 @@
+using _Project.Scripts.Runtime;
+using _Project.Scripts.Runtime.Character;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-namespace _Project.Scripts.Runtime
+namespace _Project.Scripts.Environment
 {
     public class BackgroundChanger : MonoBehaviour
     {
