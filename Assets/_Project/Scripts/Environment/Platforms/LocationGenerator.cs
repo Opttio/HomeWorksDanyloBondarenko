@@ -23,12 +23,7 @@ namespace _Project.Scripts.Environment.Platforms
 
         private void Start()
         {
-            var camera = Camera.main;
-            Vector3 leftPoint = camera.ViewportToWorldPoint(new Vector3(0, 0, 0));
-            Vector3 rightPoint = camera.ViewportToWorldPoint(new Vector3(1, 0, 0));
-            _screenLeftX = leftPoint.x;
-            _screenRightX = rightPoint.x;
-
+            DetermineTheScreenSize();
             GanerateInitialPlatforms();
         }
 
@@ -39,6 +34,15 @@ namespace _Project.Scripts.Environment.Platforms
                 GeneratePlatformRow();
                 CleanPlatformRow();
             }
+        }
+
+        private void DetermineTheScreenSize()
+        {
+            var camera = Camera.main;
+            Vector3 leftPoint = camera.ViewportToWorldPoint(new Vector3(0, 0, 0));
+            Vector3 rightPoint = camera.ViewportToWorldPoint(new Vector3(1, 0, 0));
+            _screenLeftX = leftPoint.x;
+            _screenRightX = rightPoint.x;
         }
 
         private void GanerateInitialPlatforms()
