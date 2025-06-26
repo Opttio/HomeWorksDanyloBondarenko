@@ -136,8 +136,10 @@ MonoBehaviour:
   _objOnPlatforms:
   - {fileID: 5271170829223603350, guid: 723ef152ae0004c41a42d0dc2fa56eee, type: 3}
   - {fileID: 4501469807063202776, guid: 998888525a0b16d4e8b0a0232169b847, type: 3}
+  - {fileID: 1314055019221539251, guid: 3eebcd239943ca64fb39caee67ebd815, type: 3}
   _spawnPoint: {fileID: 4358096874586948304}
   _spawnChance: 0.2
+  _spawnAttemptChance: 0.9
 --- !u!1 &3961317334421305765
 GameObject:
   m_ObjectHideFlags: 0
