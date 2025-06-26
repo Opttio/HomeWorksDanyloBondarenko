@@ -1,13 +1,12 @@
-using System;
-using UnityEditor.U2D.Aseprite;
+using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.UI.Model;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Runtime.Character
 {
     public class MainCharacter : MonoBehaviour
     {
-        [SerializeField] private Rigidbody2D _playerRB;
+        [SerializeField] private Rigidbody2D _playerRb;
         [SerializeField] private float _jumpPower;
         private bool _isGrounded = false;
         private bool _isDoubleJump = false;
@@ -19,15 +18,28 @@ namespace _Project.Scripts.Runtime.Character
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _bouncePower;
         [SerializeField] private LayerMask _bounceLayer;
+        [SerializeField] private int _attempts = 3;
         
         public bool IsGrounded => _isGrounded;
-        public Rigidbody2D PlayerRB => _playerRB;
+        public Rigidbody2D PlayerRb => _playerRb;
+
+        private void Start()
+        {
+            FirstModelAttemptAndDistanceInit();
+            Time.timeScale = 0f;
+        }
+
+        private void OnEnable()
+        {
+            SubscribeToEvents();
+        }
 
         private void Update()
         {
             CanJump(out _isGrounded);
             PushSpace();
             CanBounce(out _isBounce);
+            SignalWhenDistanceIsChange();
         }
 
         private void FixedUpdate()
@@ -43,6 +55,11 @@ namespace _Project.Scripts.Runtime.Character
             }
         }
 
+        private void OnDisable()
+        {
+            UnSubscribeToEvents();
+        }
+
         private void Move()
         {
             Vector2 inputVector = _playerInput.GetMoveInputVector();
@@ -54,13 +71,31 @@ namespace _Project.Scripts.Runtime.Character
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.tag == "Enemy")
+            if (other.CompareTag("Enemy"))
             {
+                ViewModel.ViewId = 2;
                 Time.timeScale = 0f;
+                GameUIBus.ChangeViewId(ViewModel.ViewId);
+                Destroy(other.gameObject);
+            }
+
+            if (other.CompareTag("Attempt"))
+            {
+                SignalWhenAttemptIsChange();
+                Destroy(other.gameObject);
+            }
+
+            if (other.CompareTag("BottomEnds"))
+            {
+                Jump();
+                ViewModel.ViewId = 2;
+                Time.timeScale = 0f;
+                GameUIBus.ChangeViewId(ViewModel.ViewId);
             }
         }
-        
+
         #region Double Jump
+
         private void PushSpace()
         {
             if (_isDoubleJump == false)
@@ -71,44 +106,96 @@ namespace _Project.Scripts.Runtime.Character
 
         private void DoubleJump()
         {
-            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
+            _playerRb.linearVelocity = new Vector2(_playerRb.linearVelocity.x, _jumpPower);
             _isDoubleJump = false;
             _pushSpace = false;
         }
+
         #endregion
+
         #region Jump
+
         public void Jump()
         {
-            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _jumpPower);
+            _playerRb.linearVelocity = new Vector2(_playerRb.linearVelocity.x, _jumpPower);
             _isGrounded = false;
             _isDoubleJump = true;
         }
 
-        private void CanJump(out bool _isGrounded)
+        private void CanJump(out bool isGrounded)
         {
-            Debug.DrawRay(_playerRB.position, Vector2.down * _groundCheckDistance, Color.red);
+            Debug.DrawRay(_playerRb.position, Vector2.down * _groundCheckDistance, Color.red);
             
-            if (_playerRB.linearVelocity.y > 0) _isGrounded = false;
+            if (_playerRb.linearVelocity.y > 0) isGrounded = false;
             else
-                _isGrounded = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance, _groundLayer);
+                isGrounded = Physics2D.Raycast(_playerRb.position, Vector2.down, _groundCheckDistance, _groundLayer);
         }
+
         #endregion
+
         #region Bounce
+
         public void Bounce()
         {
-            _playerRB.linearVelocity = new Vector2(_playerRB.linearVelocity.x, _bouncePower);
+            _playerRb.linearVelocity = new Vector2(_playerRb.linearVelocity.x, _bouncePower);
             _isBounce = false;
             _isDoubleJump = true;
             _pushSpace = false;
             _isGrounded = false;
         }
 
-        private void CanBounce(out bool _isBounce)
+        private void CanBounce(out bool isBounce)
         {
-            if (_playerRB.linearVelocity.y > 0) _isBounce = false;
+            if (_playerRb.linearVelocity.y > 0) isBounce = false;
             else
-                _isBounce = Physics2D.Raycast(_playerRB.position, Vector2.down, _groundCheckDistance, _bounceLayer);
+                isBounce = Physics2D.Raycast(_playerRb.position, Vector2.down, _groundCheckDistance, _bounceLayer);
         }
+
         #endregion
+
+        private int CalculateDistance(float currentDistance, int characterDistance)
+        {
+            if (characterDistance < currentDistance)
+                return (int) currentDistance;
+            return characterDistance;
+        }
+
+        private void SignalWhenDistanceIsChange()
+        {
+            CharacterModel.Distance = CalculateDistance(transform.position.y, CharacterModel.Distance);
+            GameEventBus.ChangeDistance(CharacterModel.Distance);
+        }
+
+        private void FirstModelAttemptAndDistanceInit()
+        {
+            CharacterModel.Attempt = _attempts;
+            GameEventBus.ChangeAttempt(CharacterModel.Attempt);
+            CharacterModel.Distance = 0;
+            GameEventBus.ChangeDistance(CharacterModel.Distance);
+        }
+
+        private void SignalWhenAttemptIsChange()
+        {
+            if (_attempts >= 99)
+                return;
+            _attempts++;
+            CharacterModel.Attempt = _attempts;
+            GameEventBus.ChangeAttempt(CharacterModel.Attempt);
+        }
+
+        private void SubscribeToEvents()
+        {
+            GameEventBus.OnGameSpeed += OnGameSpeed;
+        }
+
+        private void UnSubscribeToEvents()
+        {
+            GameEventBus.OnGameSpeed -= OnGameSpeed;
+        }
+
+        private void OnGameSpeed(float speed)
+        {
+            Time.timeScale = speed;
+        }
     }
 }

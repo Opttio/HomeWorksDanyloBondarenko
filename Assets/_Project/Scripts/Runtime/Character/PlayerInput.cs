@@ -11,6 +11,11 @@ namespace _Project.Scripts.Runtime.Character
             inputSystemActions = new InputSystem_Actions();
             inputSystemActions.Player.Enable();
         }
+        
+        private void OnDisable()
+        {
+            inputSystemActions.Player.Disable();
+        }
 
         public Vector2 GetMoveInputVector()
         {

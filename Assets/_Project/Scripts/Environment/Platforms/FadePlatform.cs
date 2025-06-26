@@ -44,7 +44,7 @@ namespace _Project.Scripts.Environment.Platforms
         private void CanChangePlatform(out bool _isChange)
         {
             Debug.DrawRay(transform.position, Vector2.up * _playerCheckDistance, Color.red);
-            if (_character.PlayerRB.linearVelocity.y > 0) _isChange = false;
+            if (_character.PlayerRb.linearVelocity.y > 0) _isChange = false;
             else
             {
                 _isChange = Physics2D.Raycast(transform.position, Vector2.up, _playerCheckDistance, _characterMask);

@@ -20,7 +20,6 @@ namespace _Project.Scripts.Environment.PlatformsModule
         protected override void ExecuteInternal()
         {
             ChangeFadePlatform(_counter);
-            Debug.Log("ChangeFadePlatform");
         }
 
         private void ChangeFadePlatform(int counter)

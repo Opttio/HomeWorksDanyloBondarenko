@@ -8,6 +8,7 @@ namespace _Project.Scripts.Environment.PlatformsModule
         [SerializeField] private GameObject[] _objOnPlatforms;
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private float _spawnChance = 0.4f;
+        [SerializeField] private float _spawnAttemptChance = 0.8f;
         protected override void ExecuteInternal()
         {
             SpawnRandomObjFromPull();
@@ -27,6 +28,13 @@ namespace _Project.Scripts.Environment.PlatformsModule
                 Instantiate(randomObj, randomSpawnPosition, Quaternion.identity, _spawnPoint);
                 return;
             }
+
+            if (randomObj.tag == "Attempt" && Random.value > _spawnAttemptChance)
+            {
+                Instantiate(randomObj, _spawnPoint.position, Quaternion.identity, _spawnPoint);
+                return;
+            }
+
             Instantiate(randomObj, _spawnPoint.position, Quaternion.identity, _spawnPoint);
         }
     }

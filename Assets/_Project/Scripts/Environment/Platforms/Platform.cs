@@ -33,7 +33,6 @@ namespace _Project.Scripts.Environment.Platforms
             {
                 if (_isChange)
                 {
-                    Debug.Log("Touch");
                     foreach (var actionBase in _executeWhenPlayerTouch)
                     {
                         actionBase.Execute();

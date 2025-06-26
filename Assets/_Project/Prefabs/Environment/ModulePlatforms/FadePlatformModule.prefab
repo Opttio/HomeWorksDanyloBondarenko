@@ -422,6 +422,7 @@ MonoBehaviour:
   - {fileID: 4501469807063202776, guid: 998888525a0b16d4e8b0a0232169b847, type: 3}
   _spawnPoint: {fileID: 4188441488290225437}
   _spawnChance: 0.2
+  _spawnAttemptChance: 0.9
 --- !u!1 &7017993603284139752
 GameObject:
   m_ObjectHideFlags: 0
