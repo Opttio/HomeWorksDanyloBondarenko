@@ -1,6 +1,5 @@
-using System;
 using _Project.Scripts.Core.EventBus;
-using _Project.Scripts.UI.Model;
+using _Project.Scripts.Runtime.Interfaces;
 using UnityEngine;
 
 namespace _Project.Scripts.UI.Managers
@@ -41,6 +40,8 @@ namespace _Project.Scripts.UI.Managers
             foreach (var view in _views)
                 view.enabled = false;
             _views[id].enabled = true;
+            var viewComponent = _views[id].GetComponent<IView>();
+            viewComponent?.OnViewActivated();
         }
     }
 }

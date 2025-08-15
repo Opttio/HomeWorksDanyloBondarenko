@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Runtime.Controllers;
 using _Project.Scripts.UI.Model;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,8 @@ namespace _Project.Scripts.UI.View
     public class FunMenuView : MonoBehaviour
     {
         [SerializeField] private Button _playButton;
+        [Space]
+        [SerializeField] private AudioClip _uiClick;
         
         private void OnEnable()
         {
@@ -33,6 +36,11 @@ namespace _Project.Scripts.UI.View
         {
             ViewModel.ViewId = 0;
             GameUIBus.ChangeViewId(ViewModel.ViewId);
+            PlayUiClick();
+        }
+        private void PlayUiClick()
+        {
+            AudioController.Instance.PlayUi(_uiClick);
         }
     }
 }

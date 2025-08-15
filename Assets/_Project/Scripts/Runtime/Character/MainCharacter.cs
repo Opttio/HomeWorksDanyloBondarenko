@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Runtime.Controllers;
 using _Project.Scripts.UI.Model;
 using UnityEngine;
 
@@ -19,6 +20,11 @@ namespace _Project.Scripts.Runtime.Character
         [SerializeField] private float _bouncePower;
         [SerializeField] private LayerMask _bounceLayer;
         [SerializeField] private int _attempts = 3;
+        [Header("Audio")]
+        [SerializeField] private AudioClip _jumpClip;
+        [SerializeField] private AudioClip _doubleJumpClip;
+        [SerializeField] private AudioClip _bounceClip;
+        [SerializeField] private AudioClip _attemptPickUpClip;
         
         public bool IsGrounded => _isGrounded;
         public Rigidbody2D PlayerRb => _playerRb;
@@ -83,6 +89,7 @@ namespace _Project.Scripts.Runtime.Character
             {
                 SignalWhenAttemptIsChange();
                 Destroy(other.gameObject);
+                AudioController.Instance.PlaySfx(_attemptPickUpClip);
             }
 
             if (other.CompareTag("BottomEnds"))
@@ -109,6 +116,7 @@ namespace _Project.Scripts.Runtime.Character
             _playerRb.linearVelocity = new Vector2(_playerRb.linearVelocity.x, _jumpPower);
             _isDoubleJump = false;
             _pushSpace = false;
+            AudioController.Instance.PlaySfx(_doubleJumpClip, Random.Range(0.8f, 1.2f));
         }
 
         #endregion
@@ -120,6 +128,7 @@ namespace _Project.Scripts.Runtime.Character
             _playerRb.linearVelocity = new Vector2(_playerRb.linearVelocity.x, _jumpPower);
             _isGrounded = false;
             _isDoubleJump = true;
+            AudioController.Instance.PlaySfx(_jumpClip, Random.Range(0.8f, 1.2f));
         }
 
         private void CanJump(out bool isGrounded)
@@ -142,6 +151,7 @@ namespace _Project.Scripts.Runtime.Character
             _isDoubleJump = true;
             _pushSpace = false;
             _isGrounded = false;
+            AudioController.Instance.PlaySfx(_bounceClip);
         }
 
         private void CanBounce(out bool isBounce)
