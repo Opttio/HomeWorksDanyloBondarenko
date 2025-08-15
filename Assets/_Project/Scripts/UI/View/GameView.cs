@@ -1,4 +1,6 @@
 using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Runtime.Controllers;
+using _Project.Scripts.Runtime.Interfaces;
 using _Project.Scripts.UI.Model;
 using TMPro;
 using UnityEngine;
@@ -7,12 +9,14 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.View
 {
-    public class GameView : MonoBehaviour
+    public class GameView : MonoBehaviour, IView
     {
         [SerializeField] private TMP_Text _distanceText; //Узагальнений варіант
         [SerializeField] private TextMeshProUGUI _attemptText; //Беспосередньо до тексту у канвасі
         [SerializeField] private Button _toMenuButton;
-        
+        [Space]
+        [SerializeField] private AudioClip _musicTheme;
+
         private void OnEnable()
         {
             SubscribeToEvents();
@@ -53,20 +57,28 @@ namespace _Project.Scripts.UI.View
 
         private void SignalToChangeCanvasToMenu()
         {
-            // CharacterModel.Attempt = 0;
-            // GameEventBus.ChangeAttempt(CharacterModel.Attempt);
-            // CharacterModel.Distance = 0;
-            // GameEventBus.ChangeDistance(CharacterModel.Distance);
             ViewModel.ViewId = 0;
             GameUIBus.ChangeViewId(ViewModel.ViewId);
             CharacterModel.GameSpeed = 0f;
             GameEventBus.ChangeGameSpeed(CharacterModel.GameSpeed);
         
         }
+
         private void ResetScene()
         {
             var currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.name);
+        }
+
+        public void OnViewActivated()
+        {
+            SetViewMusic();
+        }
+
+        private void SetViewMusic()
+        {
+            var startDuration = 2f;
+            AudioController.Instance.PlayMusic(_musicTheme, startDuration);
         }
     }
 }

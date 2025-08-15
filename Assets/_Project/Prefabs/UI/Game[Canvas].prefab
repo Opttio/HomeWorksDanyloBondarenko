@@ -559,7 +559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4025825213892043633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -597,6 +597,7 @@ MonoBehaviour:
   _distanceText: {fileID: 5611004620801864508}
   _attemptText: {fileID: 5776236422256089932}
   _toMenuButton: {fileID: 3755914966740882649}
+  _musicTheme: {fileID: 8300000, guid: 745874fc7752f7c46bc6e911d56fc61f, type: 3}
 --- !u!223 &5589804240674298047
 Canvas:
   m_ObjectHideFlags: 0
