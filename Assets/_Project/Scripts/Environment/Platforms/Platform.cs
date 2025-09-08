@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using _Project.Scripts.Core.CustomActionBase;
+using _Project.Scripts.Environment.Data;
 using _Project.Scripts.Runtime.Character;
 
 namespace _Project.Scripts.Environment.Platforms
