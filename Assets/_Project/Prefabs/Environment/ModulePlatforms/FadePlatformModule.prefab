@@ -382,6 +382,7 @@ MonoBehaviour:
   _characterLayer:
     serializedVersion: 2
     m_Bits: 64
+  _target: {fileID: 8429034394701404361, guid: 6d2d94cfd02a0cf4da0605fd705ace18, type: 3}
 --- !u!114 &3260175149692268553
 MonoBehaviour:
   m_ObjectHideFlags: 0
