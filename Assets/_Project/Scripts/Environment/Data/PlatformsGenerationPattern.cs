@@ -37,11 +37,9 @@ namespace _Project.Scripts.Environment.Data
                 currentChance += _platformsPattern[i].Chance;
                 if (randomValue < currentChance)
                 {
-                    Debug.Log($"Група платформ з індексом: {i} заспавнилась");
                     return _platformsPattern[i].Group;
                 }
             }
-            Debug.Log($"Група платформ з індексом: {_platformsPattern.Length - 1} заспавнилась");
             return _platformsPattern.Last().Group;
         }
         

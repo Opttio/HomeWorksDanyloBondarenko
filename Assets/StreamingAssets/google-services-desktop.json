@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "368072868915",
+    "firebase_url": "https://mygame-c3b88-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mygame-c3b88",
+    "storage_bucket": "mygame-c3b88.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368072868915:android:15e752239aa02ca8f9cf46",
+        "android_client_info": {
+          "package_name": "com.danilostudio.mygame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5CV_QvaKnLTuGWf3o_IBAQwT4DSEFpWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
