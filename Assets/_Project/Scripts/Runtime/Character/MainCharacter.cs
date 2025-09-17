@@ -1,6 +1,7 @@
 using _Project.Scripts.Core.EventBus;
 using _Project.Scripts.Runtime.Controllers;
 using _Project.Scripts.UI.Model;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Runtime.Character
@@ -9,30 +10,32 @@ namespace _Project.Scripts.Runtime.Character
     {
         [SerializeField] private Rigidbody2D _playerRb;
         [SerializeField] private float _jumpPower;
-        private bool _isGrounded = false;
-        private bool _isDoubleJump = false;
-        private bool _pushSpace = false;
-        private bool _isBounce = false;
         [SerializeField] private float _groundCheckDistance = 0.2f;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private PlayerInput _playerInput;
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _bouncePower;
         [SerializeField] private LayerMask _bounceLayer;
-        [SerializeField] private int _attempts = 3;
+        [SerializeField] private GameObject _startPlatforms;
         [Header("Audio")]
         [SerializeField] private AudioClip _jumpClip;
         [SerializeField] private AudioClip _doubleJumpClip;
         [SerializeField] private AudioClip _bounceClip;
         [SerializeField] private AudioClip _attemptPickUpClip;
-        
+        private bool _isGrounded = false;
+        private bool _isDoubleJump = false;
+        private bool _pushSpace = false;
+        private bool _isBounce = false;
+        private Vector2 _lastPosition;
+
         public bool IsGrounded => _isGrounded;
         public Rigidbody2D PlayerRb => _playerRb;
 
-        private void Start()
+        private async void Start()
         {
-            FirstModelAttemptAndDistanceInit();
             Time.timeScale = 0f;
+            await UniTask.WaitUntil(() => CharacterModel.IsLoaded);
+            InsertInPosition();
         }
 
         private void OnEnable()
@@ -46,6 +49,7 @@ namespace _Project.Scripts.Runtime.Character
             PushSpace();
             CanBounce(out _isBounce);
             SignalWhenDistanceIsChange();
+            SignalWhenPositionIsChanged();
         }
 
         private void FixedUpdate()
@@ -64,6 +68,15 @@ namespace _Project.Scripts.Runtime.Character
         private void OnDisable()
         {
             UnSubscribeToEvents();
+        }
+
+        private void InsertInPosition()
+        {
+            var pos = CharacterModel.Position;
+            transform.position = new Vector3(pos.x, pos.y, transform.position.z);
+            var startPlatformPosition = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+            Instantiate(_startPlatforms, startPlatformPosition, Quaternion.identity);
+            Debug.Log($"Позицію гравця завантажено у {pos.x} та {pos.y}");
         }
 
         private void Move()
@@ -176,20 +189,22 @@ namespace _Project.Scripts.Runtime.Character
             GameEventBus.ChangeDistance(CharacterModel.Distance);
         }
 
-        private void FirstModelAttemptAndDistanceInit()
+        private void SignalWhenPositionIsChanged()
         {
-            CharacterModel.Attempt = _attempts;
-            GameEventBus.ChangeAttempt(CharacterModel.Attempt);
-            CharacterModel.Distance = 0;
-            GameEventBus.ChangeDistance(CharacterModel.Distance);
+            Vector2 current = transform.position;
+            if (current != _lastPosition)
+            {
+                _lastPosition = current;
+                CharacterModel.Position = current;
+                GameEventBus.ChangePosition(current);
+            }
         }
 
         private void SignalWhenAttemptIsChange()
         {
-            if (_attempts >= 99)
+            if (CharacterModel.Attempt >= 99)
                 return;
-            _attempts++;
-            CharacterModel.Attempt = _attempts;
+            CharacterModel.Attempt++;
             GameEventBus.ChangeAttempt(CharacterModel.Attempt);
         }
 

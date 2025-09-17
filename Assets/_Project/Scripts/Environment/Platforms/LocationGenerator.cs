@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Data;
 using _Project.Scripts.Environment.Data;
 using UnityEngine;
 
@@ -20,12 +22,19 @@ namespace _Project.Scripts.Environment.Platforms
         private float _screenLeftX;
         private float _screenRightX;
         private float _highestY = 0f;
+        
+        private bool _isLoaded = false;
+        
+        private float _previousHighestY = 0f;
 
         private void Start()
         {
             DetermineTheScreenSize();
             _generationPattern.Init(_playerTarget, _platformsParent, GetScreenWidth());
-            GenerateInitialPlatforms();
+            if (!_isLoaded)
+            {
+                GenerateInitialPlatforms();
+            }
         }
 
         private void Update()
@@ -36,6 +45,8 @@ namespace _Project.Scripts.Environment.Platforms
                 SpawnNextGroup();
                 CleanPlatformGroup();
             }
+
+            SignalWhenHighestYIsChanged();
         }
 
         public Vector2 GetScreenWidth()
@@ -97,6 +108,47 @@ namespace _Project.Scripts.Environment.Platforms
                         Destroy(platform.gameObject);
                     }
                 }
+            }
+        }
+        
+        private void ClearPlatforms()
+        {
+            while (_platformsQueue.Count > 0)
+            {
+                var group = _platformsQueue.Dequeue();
+                foreach (var platform in group.SpawnedPlatforms)
+                {
+                    if (platform) Destroy(platform.gameObject);
+                }
+            }
+        }
+
+        private void SignalWhenHighestYIsChanged()
+        {
+            if (!Mathf.Approximately(_previousHighestY, _highestY))
+            {
+                _previousHighestY = _highestY;
+                GameEventBus.ChangeHighestY(_highestY);
+            }
+        }
+        
+        public float GetCurrentHighestY() => _highestY;
+        public void SetHighestY(float value) => _highestY = value;
+        public void LoadState(PlayerSaveData data)
+        {
+            _highestY = data.highestY;
+            _isLoaded = true;
+            ClearPlatforms();
+            SpawnNextGroup();
+        }
+        public void GenerateInitialPlatformsAround(float playerY)
+        {
+            ClearPlatforms();
+            _highestY = playerY;
+
+            for (int i = 0; i < _initialPlatforms; i++)
+            {
+                SpawnNextGroup();
             }
         }
 

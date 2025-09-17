@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 8067360523398034624}
   - component: {fileID: 8348785525417958434}
   - component: {fileID: 52284151123860293}
-  - component: {fileID: 2859209361649190112}
   - component: {fileID: 1364593964935099732}
   m_Layer: 6
   m_Name: MainCharacter
@@ -167,7 +166,7 @@ MonoBehaviour:
   _bounceLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attempts: 3
+  _startPlatforms: {fileID: 299643199866663779, guid: a68d937400f3aa64bb3b077cd1132d36, type: 3}
   _jumpClip: {fileID: 8300000, guid: fce55057817a5ff4ca97daceeab8e584, type: 3}
   _doubleJumpClip: {fileID: 8300000, guid: aa17ae7f86066954b9336539a1622ab7, type: 3}
   _bounceClip: {fileID: 8300000, guid: ccaf75bd46df36e46bea3dd8c05e7e7e, type: 3}
@@ -185,19 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenOffset: 0.5
---- !u!114 &2859209361649190112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4307979879592089760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa1264400f994404abbaf8e9f920c38a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _screenOffset: 0.4
 --- !u!81 &1364593964935099732
 AudioListener:
   m_ObjectHideFlags: 0

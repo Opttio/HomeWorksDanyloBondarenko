@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Runtime.Bootstraps;
 using _Project.Scripts.Runtime.Controllers;
 using _Project.Scripts.Runtime.Interfaces;
 using _Project.Scripts.UI.Model;
@@ -67,8 +68,14 @@ namespace _Project.Scripts.UI.View
             GameEventBus.ChangeGameSpeed(CharacterModel.GameSpeed);
             PlayUiClick();
         }
-        private void ResetScene()
+        private async void ResetScene()
         {
+            PlayUiClick();
+
+            await FirebaseBootstrap.DeleteUserSaveData();
+            
+            CharacterModel.Reset();
+
             var currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.name);
         }

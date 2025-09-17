@@ -1,5 +1,42 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "98538ef7c7a22f4ec22101e72f7eec4ed831c724"
+    },
+    "com.google.external-dependency-manager": {
+      "version": "file:ExternalFirebase/com.google.external-dependency-manager-1.2.186.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.google.firebase.app": {
+      "version": "file:ExternalFirebase/com.google.firebase.app-13.2.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.186"
+      }
+    },
+    "com.google.firebase.auth": {
+      "version": "file:ExternalFirebase/com.google.firebase.auth-13.2.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "13.2.0"
+      }
+    },
+    "com.google.firebase.database": {
+      "version": "file:ExternalFirebase/com.google.firebase.database-13.2.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.auth": "13.2.0"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "10.1.4",
       "depth": 1,
