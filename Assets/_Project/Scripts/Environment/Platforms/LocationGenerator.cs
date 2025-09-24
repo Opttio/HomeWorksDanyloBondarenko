@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Core.EventBus;
+using _Project.Scripts.Core.Extensions;
 using _Project.Scripts.Data;
 using _Project.Scripts.Environment.Data;
 using UnityEngine;
@@ -8,28 +9,19 @@ namespace _Project.Scripts.Environment.Platforms
 {
     public class LocationGenerator : MonoBehaviour
     {
-        // [SerializeField] private GameObject[] _platforms;
         [SerializeField] private PlatformsGenerationPattern _generationPattern;
         [SerializeField] private Transform _platformsParent;
         [SerializeField] private int _initialPlatforms = 15;
-        // [SerializeField] private float _distanceBetweenPlatforms = 2f;
         [SerializeField] private float _removingPlatformsHeight = 10f;
         [SerializeField] private Transform _playerTarget;
     
-        // private Queue<GameObject> _platformsQueue = new();
         private Queue<PlatformsGroupData.GroupSpawnResult> _platformsQueue = new();
-
-        private float _screenLeftX;
-        private float _screenRightX;
         private float _highestY = 0f;
-        
         private bool _isLoaded = false;
-        
         private float _previousHighestY = 0f;
 
         private void Start()
         {
-            DetermineTheScreenSize();
             _generationPattern.Init(_playerTarget, _platformsParent, GetScreenWidth());
             if (!_isLoaded)
             {
@@ -41,7 +33,6 @@ namespace _Project.Scripts.Environment.Platforms
         {
             if (_playerTarget.position.y + _removingPlatformsHeight > _highestY)
             {
-                // GeneratePlatformRow();
                 SpawnNextGroup();
                 CleanPlatformGroup();
             }
@@ -49,25 +40,16 @@ namespace _Project.Scripts.Environment.Platforms
             SignalWhenHighestYIsChanged();
         }
 
-        public Vector2 GetScreenWidth()
+        private Vector2 GetScreenWidth()
         {
-            return new Vector2(_screenLeftX, _screenRightX);
-        }
-
-        private void DetermineTheScreenSize()
-        {
-            var camera = Camera.main;
-            Vector3 leftPoint = camera.ViewportToWorldPoint(new Vector3(0, 0, 0));
-            Vector3 rightPoint = camera.ViewportToWorldPoint(new Vector3(1, 0, 0));
-            _screenLeftX = leftPoint.x;
-            _screenRightX = rightPoint.x;
+            var screenWidth = Camera.main.GetScreenHorizontalBounds(0f);
+            return new Vector2(screenWidth.Left, screenWidth.Right);
         }
 
         private void GenerateInitialPlatforms()
         {
             for (int i = 0; i < _initialPlatforms; i++)
             {
-                // GeneratePlatformRow();
                 SpawnNextGroup();
             }
         }
@@ -151,24 +133,5 @@ namespace _Project.Scripts.Environment.Platforms
                 SpawnNextGroup();
             }
         }
-
-        /*private void GeneratePlatformRow()
-        {
-            float x = Random.Range (_screenLeftX + 0.25f, _screenRightX - 0.25f);
-            var position = new Vector3(x, _highestY, 0f);
-            var platform = _platforms[Random.Range(0, _platforms.Length)];
-            var platformInstance = Instantiate(platform, position, Quaternion.identity, _platformsParent);
-            _platformsQueue.Enqueue(platformInstance);
-        
-            _highestY += _distanceBetweenPlatforms;
-        }*/
-
-        /*private void CleanPlatformRow()
-        {
-            if (_platformsQueue.Count > 0)
-            {
-                Destroy(_platformsQueue.Dequeue());
-            }
-        }*/
     }
 }
