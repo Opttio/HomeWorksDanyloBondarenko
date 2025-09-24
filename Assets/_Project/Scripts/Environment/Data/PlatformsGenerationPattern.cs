@@ -1,4 +1,4 @@
-using System.Linq;
+using _Project.Scripts.Core.Extensions;
 using UnityEngine;
 
 
@@ -28,19 +28,7 @@ namespace _Project.Scripts.Environment.Data
 
         private PlatformsGroupData GetRandomGroup()
         {
-            var chanceSum = _platformsPattern.Sum(pattern => pattern.Chance);
-            var randomValue = Random.Range(0, chanceSum);
-            var currentChance = 0;
-
-            for (var i = 0; i < _platformsPattern.Length; i++)
-            {
-                currentChance += _platformsPattern[i].Chance;
-                if (randomValue < currentChance)
-                {
-                    return _platformsPattern[i].Group;
-                }
-            }
-            return _platformsPattern.Last().Group;
+            return _platformsPattern.GetRandomByWeight(x => x.Chance).Group;
         }
         
         [System.Serializable]
