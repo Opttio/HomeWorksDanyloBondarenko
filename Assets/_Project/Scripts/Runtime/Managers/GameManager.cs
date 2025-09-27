@@ -12,7 +12,8 @@ namespace _Project.Scripts.Runtime.Managers
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private LocationGenerator _locationGenerator;
+        // [SerializeField] private LocationGenerator _locationGenerator;
+        [SerializeField] private LocationGeneratorFromPool _locationGenerator;
 
         private PlayerSaveData _playerSaveData = new PlayerSaveData();
         private CancellationTokenSource _autoSaveCts;

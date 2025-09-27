@@ -382,7 +382,6 @@ MonoBehaviour:
   _characterLayer:
     serializedVersion: 2
     m_Bits: 64
-  _target: {fileID: 8429034394701404361, guid: 6d2d94cfd02a0cf4da0605fd705ace18, type: 3}
 --- !u!114 &3260175149692268553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,7 +499,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1214564080, guid: cf5d674d177df4941ad42665689983c5, type: 3}
+  m_Sprite: {fileID: 482991542, guid: cf5d674d177df4941ad42665689983c5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -674,7 +673,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 482991542, guid: cf5d674d177df4941ad42665689983c5, type: 3}
+  m_Sprite: {fileID: 319608687, guid: cf5d674d177df4941ad42665689983c5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
