@@ -7,19 +7,26 @@ namespace _Project.Scripts.Environment.PlatformsModule
     public class FadePlatformModule : ActionBase
     {
         [SerializeField] private GameObject[] _fadeObjectPull;
-        private int _counter = 1;
+        private int _counter;
+
+        private void OnEnable()
+        {
+            _counter = 0;
+            ChangeFadePlatform(_counter);
+        }
 
         private void Update()
         {
-            if (_counter == _fadeObjectPull.Length)
+            if (_counter >= _fadeObjectPull.Length)
             {
-                Destroy(this.gameObject);
+                gameObject.SetActive(false);
             }
         }
 
         protected override void ExecuteInternal()
         {
-            ChangeFadePlatform(_counter);
+            if (_counter < _fadeObjectPull.Length) 
+                ChangeFadePlatform(_counter);
         }
 
         private void ChangeFadePlatform(int counter)
@@ -29,12 +36,15 @@ namespace _Project.Scripts.Environment.PlatformsModule
                 Debug.LogError("FadeObjectPull is empty");
                 return;
             }
-            TirnOffAllFadePlatforms();
-            _fadeObjectPull[counter].SetActive(true);
-            _counter++;
+            TurnOffAllFadePlatforms();
+            if (counter < _fadeObjectPull.Length)
+            {
+                _fadeObjectPull[counter].SetActive(true);
+                _counter++;
+            }
         }
 
-        private void TirnOffAllFadePlatforms()
+        private void TurnOffAllFadePlatforms()
         {
             foreach (var fadeObject in _fadeObjectPull) 
                 fadeObject.SetActive(false);
