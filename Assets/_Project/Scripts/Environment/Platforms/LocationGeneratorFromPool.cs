@@ -3,12 +3,13 @@ using _Project.Scripts.Core.EventBus;
 using _Project.Scripts.Core.Extensions;
 using _Project.Scripts.Data;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Environment.Platforms
 {
     public class LocationGeneratorFromPool : MonoBehaviour
     {
-        [SerializeField] private PlatformPoolManager _pool;
+        // [SerializeField] private PlatformPoolManager _pool;
         [SerializeField] private int _initialPlatforms = 15;
         [SerializeField] private float _removingPlatformsHeight = 10f;
         [SerializeField] private float _heightBounds = 2f;
@@ -19,6 +20,15 @@ namespace _Project.Scripts.Environment.Platforms
         private float _lastSignaledHighestY = 0f;
         private Vector2 _screenWidth;
         private Queue<GameObject> _platformsQueue = new();
+        
+        //Inject
+        private PlatformPoolManager _pool;
+        
+        [Inject]
+        private void Construct(PlatformPoolManager pool)
+        {
+            _pool = pool;
+        }
 
         private void Start()
         {
