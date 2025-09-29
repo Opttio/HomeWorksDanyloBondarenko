@@ -3,6 +3,7 @@ using System.Linq;
 using _Project.Scripts.Core.Extensions;
 using _Project.Scripts.Environment.Data;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Environment.Platforms
 {
@@ -12,13 +13,22 @@ namespace _Project.Scripts.Environment.Platforms
         [SerializeField] private int _poolSize = 32;
         [SerializeField] private Transform _platformsParent;
         private readonly List<GameObject> _platformPool = new List<GameObject>();
+        
+        //Inject
+        private DiContainer _container;
+
+        [Inject]
+        private void Construct(DiContainer container)
+        {
+            _container = container;
+        }
 
         private void Awake()
         {
             for (var i = 0; i < _poolSize; i++)
             {
                 var selected = _platformDataList.GetRandomByWeight(p => p.Chance);
-                var instance = Instantiate(selected.PlatformPrefab, _platformsParent);
+                var instance = _container.InstantiatePrefab(selected.PlatformPrefab, _platformsParent);
                 ReturnPlatform(instance);
                 _platformPool.Add(instance);
             }
